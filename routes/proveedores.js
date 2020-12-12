@@ -38,8 +38,32 @@ router.patch('/:prodId', async (req, res) => {
             stock: stock !== undefined ? stock : product.stock,
             precio_cliente: precio_cliente !== undefined ? precio_cliente : product.precio_cliente
 
-        }).then(result => res.json({ message: 'User updated successfully'})).catch(err => res.json(err));
+        }).then(result => res.json({ message: 'Producto updated successfully'})).catch(err => res.json(err));
     }
+});
+
+/* AGREGAR PRODUCTOS */
+router.post('/agregar', async (req, res) => {
+    
+    let nombre = req.body.nombre;
+    let imagen = req.body.imagen;
+    let valor_unitario = req.body.valor_unitario;
+    let stock = req.body.stock;
+    let precio_cliente = req.body.precio_cliente;
+    let proveedor = req.body.proveedor;
+
+    database.table('producto').insert({
+        nombre: nombre,
+        imagen: imagen,
+        valor_unitario: valor_unitario,
+        stock: stock,
+        precio_cliente: precio_cliente,
+        proveedor: proveedor
+    }).then(result => {
+        res.json({ message: 'Product added successfully'});
+    }).catch(err => {
+        res.json(err);
+    });
 });
 
 module.exports = router;
