@@ -45,21 +45,23 @@ router.patch('/:userId', async (req, res) => {
     if (user) {
 
         let userEmail = req.body.email;
-        let userPassword = req.body.contrasena;
+        let userPassword = req.body.password;
         let userFirstName = req.body.nombre;
         let userLastName = req.body.apellido;
-        let userUsername = req.body.foto;
-        let age = req.body.tipo_usuario;
+        let foto = req.body.foto;
+        let tipo = req.body.tipo_usuario;
+        let cel = req.body.celular;
 
         // Replace the user's information with the form data ( keep the data as is if no info is modified )
         database.table('usuario').filter({id: userId}).update({
             email: userEmail !== undefined ? userEmail : user.email,
-            password: userPassword !== undefined ? userPassword : user.contrasena,
-            username: userUsername !== undefined ? userUsername : user.foto,
-            fname: userFirstName !== undefined ? userFirstName : user.nombre,
-            lname: userLastName !== undefined ? userLastName : user.apellido,
-            age: age !== undefined ? age : user.tipo_usuario
-        }).then(result => res.json('User updated successfully')).catch(err => res.json(err));
+            contrasena: userPassword !== undefined ? userPassword : user.contrasena,
+            foto: foto !== undefined ? foto : user.foto,
+            nombre: userFirstName !== undefined ? userFirstName : user.nombre,
+            apellido: userLastName !== undefined ? userLastName : user.apellido,
+            celular: cel !== undefined ? cel : user.celular,
+            tipo_usuario: tipo !== undefined ? tipo : user.tipo_usuario
+        }).then(result => res.json({ message: 'User updated successfully'})).catch(err => res.json(err));
     }
 });
 
