@@ -4,7 +4,7 @@ const {database} = require('../config/helpers');
 
 /* GET users listing. */
 router.get('/', function (req, res) {
-    database.table('Usuario')
+    database.table('usuario')
         .withFields([ 'nombre' , 'email', 'apellido', 'celular', 'foto', 'tipo_usuario', 'id' ])
         .getAll().then((list) => {
         if (list.length > 0) {
@@ -24,8 +24,9 @@ router.get('/', function (req, res) {
 /* GET ONE USER MATCHING ID */
 router.get('/:userId', (req, res) => {
     let userId = req.params.userId;
-    database.table('Usuario').filter({id: userId})
-        .withFields([ 'nombre' , 'email', 'apellido', 'lname', 'celular', 'foto', 'tipo_usuario', 'id' ])
+    console.log(userId);
+    database.table('usuario').filter({id: userId})
+        .withFields([ 'id', 'nombre' , 'apellido', 'email', 'celular', 'foto', 'tipo_usuario' ])
         .get().then(user => {
         if (user) {
             res.json({user});
@@ -40,7 +41,7 @@ router.patch('/:userId', async (req, res) => {
     let userId = req.params.userId;     // Get the User ID from the parameter
 
   // Search User in Database if any
-    let user = await database.table('Usuario').filter({id: userId}).get();
+    let user = await database.table('usuario').filter({id: userId}).get();
     if (user) {
 
         let userEmail = req.body.email;
@@ -51,7 +52,7 @@ router.patch('/:userId', async (req, res) => {
         let age = req.body.tipo_usuario;
 
         // Replace the user's information with the form data ( keep the data as is if no info is modified )
-        database.table('Usuario').filter({id: userId}).update({
+        database.table('usuario').filter({id: userId}).update({
             email: userEmail !== undefined ? userEmail : user.email,
             password: userPassword !== undefined ? userPassword : user.contrasena,
             username: userUsername !== undefined ? userUsername : user.foto,
