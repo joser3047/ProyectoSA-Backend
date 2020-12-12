@@ -3,10 +3,11 @@ const jwt = require('jsonwebtoken');
 //const bcrypt = require('bcrypt');
 
 let conn = new Mysqli({
+
     host: '35.226.125.64', // IP/domain name
-    post: 3306, // port, default 3306 
+    port: 3306, // port, default 3306 
     user: 'root', // username 
-    passwd: 'adminSA', // password
+    password: 'adminSA', // password 
     db: 'proyectosa'
 });
 
