@@ -66,4 +66,15 @@ router.post('/agregar', async (req, res) => {
     });
 });
 
+/* DELETE PRODUCTO */
+router.delete('/:prodId', async (req, res) => {
+    let prodId = req.params.prodId;     // Get the User ID from the parameter
+
+    database.table('producto').filter({ codigo: prodId }).remove().then(result => {
+        res.json({ message: 'Producto deleted successfully'});
+    }).catch(err => {
+        res.json(err);
+    });
+});
+
 module.exports = router;
