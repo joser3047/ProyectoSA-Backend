@@ -23,9 +23,10 @@ router.get('/', function (req, res) {
 
 /* GET ONE USER MATCHING ID */
 router.get('/:userId', (req, res) => {
+    console.log('<><>>><<>>>>>>>>')
     let userId = req.params.userId;
-    database.table('Usuario').filter({id: userId})
-        .withFields([ 'nombre' , 'email', 'apellido', 'lname', 'celular', 'foto', 'tipo_usuario', 'id' ])
+    database.table('usuario').filter({id: userId})
+        .withFields([ 'nombre' , 'apellido', 'email', 'celular', 'foto', 'tipo_usuario', 'id' ])
         .get().then(user => {
         if (user) {
             res.json({user});
