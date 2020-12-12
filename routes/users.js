@@ -65,4 +65,19 @@ router.patch('/:userId', async (req, res) => {
     }
 });
 
+/* LOGIN USERS */
+router.post('/login', (req, res) => {
+    let userEmail = req.body.email;
+    let userPassword = req.body.password;
+    database.table('usuario').filter({email: userEmail, contrasena: userPassword})
+        .get().then(user => {
+            if (user) {
+                res.json(user);
+            } else {
+                res.status(404).json({message: `NO USER FOUND`});
+            }
+    }).catch(err => res.json(err) );
+});
+
+
 module.exports = router;
