@@ -43,6 +43,7 @@ const usersRouter = require('./routes/users');
 const productsRouter = require('./routes/products');
 const authRouter = require('./routes/auth');
 const orderRouter = require('./routes/order');
+const targetRouter = require('./routes/target');
 
 // Define Routes
 /**
@@ -57,5 +58,5 @@ app.use('/api/users', usersRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/orders', orderRouter);
-
+app.use('/api/target', targetRouter);
 module.exports = app;
