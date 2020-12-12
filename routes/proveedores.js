@@ -7,11 +7,13 @@ router.get('/:provId', function (req, res) {
     let provId = req.params.provId;
 
     database.table('producto').filter({ proveedor: provId })
-        .get().then(prods => {
-        if (prods) {
-            res.json({ prods });
+        .getAll().then(prods => {
+        if (prods.length > 0) {
+            res.json( prods );
         } else {
-            res.json({ message: `NO PRODUCTS FOUND WITH ID : ${provId}` });
+            res.json({ message: `NO PRODUCTS FOUND WITH PROVEEDOR ID : ${provId}` });
         }
     }).catch(err => res.json(err) );
 });
+
+module.exports = router;

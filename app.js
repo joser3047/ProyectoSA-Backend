@@ -44,6 +44,7 @@ const productsRouter = require('./routes/products');
 const authRouter = require('./routes/auth');
 const orderRouter = require('./routes/order');
 const targetRouter = require('./routes/target');
+const proveedores = require('./routes/proveedores');
 
 // Define Routes
 /**
@@ -59,4 +60,5 @@ app.use('/api/products', productsRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/target', targetRouter);
+app.use('/api/prodproveedor/', proveedores);
 module.exports = app;
