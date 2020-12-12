@@ -32,7 +32,8 @@ router.get('/', function (req, res) {       // Sending Page Query Parameter is m
             'p.stock',
             'p.precio_cliente',
             'p.imagen',
-            'p.proveedor'
+            'p.proveedor',
+            'p.codigo as id'
         ])
         .slice(startValue, endValue)
         .getAll()
@@ -52,18 +53,18 @@ router.get('/', function (req, res) {       // Sending Page Query Parameter is m
 /* GET ONE PRODUCT*/
 router.get('/:prodId', (req, res) => {
     let productId = req.params.prodId;
-    database.table('Categoria_Producto as cp')
+    database.table('categoria_producto as cp')
         .join([
             {
-                table: "Producto as p",
-                on: `p.codigo = cp.Producto_codigo`
+                table: "producto as p",
+                on: `p.codigo = cp.producto_codigo`
             },
             {
-                table: "Categoria as c",
-                on: `c.id = cp.Categoria_id`
+                table: "categoria as c",
+                on: `c.id = cp.categoria_id`
             }
         ])
-        .filter({'p.id': productId})
+        .filter({'p.codigo': productId})
         .get()
         .then(prod => {
             console.log(prod);
