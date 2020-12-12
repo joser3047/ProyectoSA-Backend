@@ -80,4 +80,36 @@ router.post('/login', (req, res) => {
 });
 
 
+/* REGISTRO USERS */
+router.post('/registro', async (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let nombre = req.body.nombre;
+    let apellido = req.body.apellido;
+    let foto = req.body.foto;
+    let tipo = req.body.tipo_usuario;
+    let cel = req.body.celular;
+
+    // Search User in Database if any
+    let user = await database.table('usuario').filter({email: email}).get();
+    if (!user) {
+        database.table('usuario').insert({
+            nombre: nombre,
+            apellido: apellido,
+            email: email,
+            contrasena: password,
+            foto: foto,
+            celular: cel,
+            tipo_usuario: tipo
+        }).then(result => {
+            res.json({ message: 'User added successfully'});
+        }).catch(err => {
+            res.json(err);
+        });
+    }
+    else {
+        res.status(409).json({ message: `Usuario con email ${email} ya existe.` });
+    }
+});
+
 module.exports = router;
