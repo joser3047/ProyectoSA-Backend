@@ -4,7 +4,7 @@ const {database} = require('../config/helpers');
 
 /* GET users listing. */
 router.get('/', function (req, res) {
-    database.table('Usuario')
+    database.table('usuario')
         .withFields([ 'nombre' , 'email', 'apellido', 'celular', 'foto', 'tipo_usuario', 'id' ])
         .getAll().then((list) => {
         if (list.length > 0) {
@@ -23,9 +23,11 @@ router.get('/', function (req, res) {
 
 /* GET ONE USER MATCHING ID */
 router.get('/:userId', (req, res) => {
+    console.log('<><>>><<>>>>>>>>')
     let userId = req.params.userId;
-    database.table('Usuario').filter({id: userId})
-        .withFields([ 'nombre' , 'email', 'apellido', 'lname', 'celular', 'foto', 'tipo_usuario', 'id' ])
+
+    database.table('usuario').filter({id: userId})
+        .withFields([ 'nombre' , 'apellido', 'email', 'celular', 'foto', 'tipo_usuario', 'id' ])
         .get().then(user => {
         if (user) {
             res.json({user});
@@ -40,25 +42,74 @@ router.patch('/:userId', async (req, res) => {
     let userId = req.params.userId;     // Get the User ID from the parameter
 
   // Search User in Database if any
-    let user = await database.table('Usuario').filter({id: userId}).get();
+    let user = await database.table('usuario').filter({id: userId}).get();
     if (user) {
 
         let userEmail = req.body.email;
-        let userPassword = req.body.contrasena;
+        let userPassword = req.body.password;
         let userFirstName = req.body.nombre;
         let userLastName = req.body.apellido;
-        let userUsername = req.body.foto;
-        let age = req.body.tipo_usuario;
+        let foto = req.body.foto;
+        let tipo = req.body.tipo_usuario;
+        let cel = req.body.celular;
 
         // Replace the user's information with the form data ( keep the data as is if no info is modified )
-        database.table('Usuario').filter({id: userId}).update({
+        database.table('usuario').filter({id: userId}).update({
             email: userEmail !== undefined ? userEmail : user.email,
-            password: userPassword !== undefined ? userPassword : user.contrasena,
-            username: userUsername !== undefined ? userUsername : user.foto,
-            fname: userFirstName !== undefined ? userFirstName : user.nombre,
-            lname: userLastName !== undefined ? userLastName : user.apellido,
-            age: age !== undefined ? age : user.tipo_usuario
-        }).then(result => res.json('User updated successfully')).catch(err => res.json(err));
+            contrasena: userPassword !== undefined ? userPassword : user.contrasena,
+            foto: foto !== undefined ? foto : user.foto,
+            nombre: userFirstName !== undefined ? userFirstName : user.nombre,
+            apellido: userLastName !== undefined ? userLastName : user.apellido,
+            celular: cel !== undefined ? cel : user.celular,
+            tipo_usuario: tipo !== undefined ? tipo : user.tipo_usuario
+        }).then(result => res.json({ message: 'User updated successfully'})).catch(err => res.json(err));
+    }
+});
+
+/* LOGIN USERS */
+router.post('/login', (req, res) => {
+    let userEmail = req.body.email;
+    let userPassword = req.body.password;
+    database.table('usuario').filter({email: userEmail, contrasena: userPassword})
+        .get().then(user => {
+            if (user) {
+                res.json(user);
+            } else {
+                res.status(404).json({message: `NO USER FOUND`});
+            }
+    }).catch(err => res.json(err) );
+});
+
+
+/* REGISTRO USERS */
+router.post('/registro', async (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+    let nombre = req.body.nombre;
+    let apellido = req.body.apellido;
+    let foto = req.body.foto;
+    let tipo = req.body.tipo_usuario;
+    let cel = req.body.celular;
+
+    // Search User in Database if any
+    let user = await database.table('usuario').filter({email: email}).get();
+    if (!user) {
+        database.table('usuario').insert({
+            nombre: nombre,
+            apellido: apellido,
+            email: email,
+            contrasena: password,
+            foto: foto,
+            celular: cel,
+            tipo_usuario: tipo
+        }).then(result => {
+            res.json({ message: 'User added successfully'});
+        }).catch(err => {
+            res.json(err);
+        });
+    }
+    else {
+        res.status(409).json({ message: `Usuario con email ${email} ya existe.` });
     }
 });
 
