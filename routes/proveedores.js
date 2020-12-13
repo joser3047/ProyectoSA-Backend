@@ -52,6 +52,7 @@ router.post('/agregar', async (req, res) => {
     let stock = req.body.stock;
     let precio_cliente = req.body.precio_cliente;
     let proveedor = req.body.proveedor;
+    let categoria = req.body.categoria;
 
     database.table('producto').insert({
         nombre: nombre,
@@ -61,7 +62,16 @@ router.post('/agregar', async (req, res) => {
         precio_cliente: precio_cliente,
         proveedor: proveedor
     }).then(result => {
-        res.json({ message: 'Product added successfully'});
+
+        database.table('categoria_producto').insert({
+            producto_codigo: result,
+            categoria_id: categoria,
+            visible: 1
+        }).then(result => {
+            res.json({ message: 'Product added successfully'});
+        }).catch(err => {
+            res.json(err);
+        })
     }).catch(err => {
         res.json(err);
     });

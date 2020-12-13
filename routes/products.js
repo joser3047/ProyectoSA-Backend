@@ -50,11 +50,25 @@ router.get('/', function (req, res) {       // Sending Page Query Parameter is m
         .catch(err => console.log(err));
 });
 
+
+/* GET CATEGORIAS*/
+router.get('/categorias', (req, res) => {
+
+    database.table('categoria')
+        .getAll().then((list) => {
+            if (list.length > 0) {
+                res.json(list);
+            } else {
+                res.json({ message: 'SIN CATEGORIAS' });
+            }
+        }).catch(err => res.json(err));
+});
+
 /* GET ONE PRODUCT*/
 router.get('/:prodId', (req, res) => {
     let productId = req.params.prodId;
     database.table('categoria_producto as cp')
-        .join([
+        .leftJoin([
             {
                 table: "producto as p",
                 on: `p.codigo = cp.producto_codigo`
@@ -65,6 +79,15 @@ router.get('/:prodId', (req, res) => {
             }
         ])
         .filter({'p.codigo': productId})
+        .withFields(['c.nombre as category',
+            'p.nombre as nombre',
+            'p.valor_unitario',
+            'p.stock',
+            'p.precio_cliente',
+            'p.imagen',
+            'p.proveedor',
+            'p.codigo as id'
+        ])
         .get()
         .then(prod => {
             console.log(prod);
@@ -93,15 +116,15 @@ router.get('/category/:catName', (req, res) => { // Sending Page Query Parameter
     // Get category title value from param
     const cat_title = req.params.catName;
 
-    database.table('Categoria_Producto as cp')
+    database.table('categoria_producto as cp')
         .join([
             {
-                table: "Producto as p",
-                on: `p.codigo = cp.Producto_codigo`
+                table: "producto as p",
+                on: `p.codigo = cp.producto_codigo`
             },
             {
-                table: "Categoria as c",
-                on: `c.id = cp.Categoria_id WHERE c.nombre LIKE '%${cat_title}%'`
+                table: "categoria as c",
+                on: `c.id = cp.categoria_id WHERE c.nombre LIKE '%${cat_title}%'`
             }
         ])
         .withFields(['c.nombre as category',
