@@ -25,6 +25,35 @@ router.post('/', function (req, res) {
     }).catch(err => res.status(433).json({error: err}));
 });
 
+//obtiene todos los numeros de tarjeta de un usuario
+router.get('/:userId', (req, res) => {
+    console.log('-------')
+    let userId = req.params.userId;
+
+    database.table('tarjeta').filter({usuario_id: userId})
+        .withFields([ 'numero','tipo_tarjeta'])
+        .getAll().then(user => {
+        if (user) {
+            res.json({user});
+        } else {
+            res.json({message: `NO USER FOUND WITH ID : ${userId}`});
+        }
+    }).catch(err => res.json(err) );
+});
+
+//delete
+router.post('/deleteT', function (req, res)  {
+
+    let {numero} = req.body;
+    console.log(numero)
+
+    database.table('tarjeta').filter({ numero: numero }).remove().then(result => {
+        res.json({ message: 'Producto deleted successfully'});
+    }).catch(err => {
+        res.json(err);
+    });
+});
+
 module.exports = router;
 
 
