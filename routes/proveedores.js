@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {database} = require('../config/helpers');
+const email = require('./mail');
 
 /* GET productos por ID proveedor */
 router.get('/:provId', function (req, res) {
@@ -76,5 +77,7 @@ router.delete('/:prodId', async (req, res) => {
         res.json(err);
     });
 });
+
+router.post('/email', email.sendEmail);
 
 module.exports = router;
