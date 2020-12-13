@@ -65,6 +65,15 @@ router.get('/:prodId', (req, res) => {
             }
         ])
         .filter({'p.codigo': productId})
+        .withFields(['c.nombre as category',
+            'p.nombre as nombre',
+            'p.valor_unitario',
+            'p.stock',
+            'p.precio_cliente',
+            'p.imagen',
+            'p.proveedor',
+            'p.codigo as id'
+        ])
         .get()
         .then(prod => {
             console.log(prod);
